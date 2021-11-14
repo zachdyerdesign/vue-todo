@@ -30,7 +30,7 @@
             <button class="nav-link active" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab" aria-controls="home" aria-selected="true">Tasks</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="rewards-tab" data-bs-toggle="tab" data-bs-target="#rewards" type="button" role="tab" aria-controls="profile" aria-selected="false">Rewards</button>
+            <button class="nav-link" id="rewards-tab" data-bs-toggle="tab" data-bs-target="#rewards" type="button" role="tab" aria-controls="profile" aria-selected="false" @click.self="deselectList">Rewards</button>
           </li>
         </ul>
         <div class="tab-content mt-2" id="myTabContent">
