@@ -1,4 +1,4 @@
-var app4 = new Vue({
+var vueTodoApp = new Vue({
   el: '#vue-todo-app',
   data: {
     taskInput: '',
