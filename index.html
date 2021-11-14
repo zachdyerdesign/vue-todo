@@ -15,17 +15,19 @@
 <body>
   <div id="vue-todo-app" class="min-vh-100" @click.self="deselectList">
     <div class="container mt-5">
-      <div class="row">
+      <div class="row" >
         <h1><i class="fas fa-tasks"></i> Vue Todo List</h1>
-        <div class="col-md-6">
+        <div class="col-md-6" @click.self="deselectList">
 
           <input type="text" class="form-control mb-2" id="todo-input" v-model="taskInput">
           <ul class="list-group" id="task-list">
-            <button type="button" class="list-group-item list-group-item-action" :class="todo.active"
+            <button type="button" class="list-group-item list-group-item-action" :class="{active: todo.active}"
               v-for="todo in todos" @click.self="selectTask(todo.id)" v-if="todo.display">
               <input class="form-check-input me-1" type="checkbox" :value="todo.id" v-model="todo.completed"
                 @click="saveCompletedTasks(todo.id)">
-              {{ todo.title }} <a href="#" @click="deleteTask(todo.id)" class="text-white float-end"
+              <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
+              <template v-else>{{todo.title}}</template> 
+              <a href="#" @click="deleteTask(todo.id)" class="text-white float-end"
                 v-if="todo.active"><i class="fas fa-trash"></i></a>
             </button>
           </ul>
