@@ -28,9 +28,10 @@ var app4 = new Vue({
       saveTask(){
         if(this.taskInput) {
           if(this.selectedTask != null) {
-            this.todos[this.selectedTask] = {id: this.selectedTask, title: this.taskInput, active: '', display: true}
+            this.todos[this.selectedTask] = {id: this.selectedTask, title: this.taskInput, active: '', display: true, completed: this.todos[this.selectedTask].completed}
           } else {
-            this.todos.push({id: this.todos.length, title: this.taskInput, active: '', display: true})
+            // new task
+            this.todos.push({id: this.todos.length, title: this.taskInput, active: '', display: true, completed: false})
           }
         }
         this.selectedTask = null   
@@ -55,7 +56,7 @@ var app4 = new Vue({
         localStorage.setItem('todos', JSON.stringify(this.todos))
       },
       deselectList(){
-        console.log('deselect list')
+        this.saveTask()
         this.todos.forEach((item, index)=>{
           this.todos[index].active = ''
         })
