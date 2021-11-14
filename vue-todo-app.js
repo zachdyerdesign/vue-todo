@@ -20,9 +20,7 @@ var vueTodoApp = new Vue({
     })
     if (localStorage.getItem('todos'))
       this.todos = JSON.parse(localStorage.getItem('todos'))
-    this.todos.forEach((item, index)=>{
-      if(item.completed) this.completedTasks++
-    })
+    this.updateCompletedTasks()
   },
   methods: {
     clearInput() {
@@ -68,14 +66,19 @@ var vueTodoApp = new Vue({
       this.clearInput()
     },
     saveCompletedTasks(id) {
-      console.log(this.todos[id])
       if (this.todos[id].completed) {
         this.todos[id].completed = false
       } else {
         this.todos[id].completed = true
       }
       localStorage.setItem('todos', JSON.stringify(this.todos))
+      this.updateCompletedTasks()
+    },
+    updateCompletedTasks(){
+      this.completedTasks = 0
+      this.todos.forEach((item, index)=>{
+        if(item.completed) this.completedTasks++
+      })
     }
-
   }
 })
