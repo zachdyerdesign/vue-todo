@@ -7,7 +7,7 @@ var vueTodoApp = new Vue({
       { id: 1, title: 'Learn Vue', active: '', display: true, completed: false },
       { id: 2, title: 'Build something awesome', active: '', display: true, completed: false }
     ],
-    completedTasks: [],
+    completedTasks: 0,
     selectedTask: null
   },
   mounted() {
@@ -20,6 +20,9 @@ var vueTodoApp = new Vue({
     })
     if (localStorage.getItem('todos'))
       this.todos = JSON.parse(localStorage.getItem('todos'))
+    this.todos.forEach((item, index)=>{
+      if(item.completed) this.completedTasks++
+    })
   },
   methods: {
     clearInput() {
