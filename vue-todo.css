@@ -1,0 +1,7 @@
+.handle:hover {
+  cursor: grab;
+}
+.handle {
+  color: rgb(156, 156, 156);
+  text-shadow: 0px 1px 0px rgba(255,255,255,.5); /*
+}
