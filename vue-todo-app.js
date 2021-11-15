@@ -18,6 +18,14 @@ var vueTodoApp = new Vue({
       this.todos = JSON.parse(localStorage.getItem('todos'))
     this.updateCompletedTasks()
   },
+  watch: {
+    todos: {
+      deep: true,
+      handler(){
+        this.updateCompletedTasks()
+      }
+    }
+  },
   methods: {
     clearInput() {
       this.taskInput = ''
