@@ -2,12 +2,8 @@ var vueTodoApp = new Vue({
   el: '#vue-todo-app',
   data: {
     taskInput: '',
-    todos: [
-      { id: 0, title: 'Learn JavaScript', active: '', display: true, completed: false },
-      { id: 1, title: 'Learn Vue', active: '', display: true, completed: false },
-      { id: 2, title: 'Build something awesome', active: '', display: true, completed: false }
-    ],
-    completedTasks: 0,
+    todos: [],
+    totalTasksCreated: 0,
     selectedTask: null
   },
   mounted() {
@@ -39,22 +35,30 @@ var vueTodoApp = new Vue({
       localStorage.setItem('todos', JSON.stringify(this.todos))
     },
     selectTask(id) {
-      console.log('select task')
+      // toggle selection
+      if(id==this.selectedTask) {
+        this.deselectList()
+        return
+      }
       this.todos.forEach((item, index) => {
         this.todos[index].active = ''
+        if(id == this.todos[index].id) {
+          this.todos[index].active = 'active'
+        }
       })
       this.taskInput = this.todos[id].title
       this.selectedTask = id
-      this.todos[id].active = 'active'
       document.getElementById('todo-input').focus()
     },
     deleteTask(id) {
       this.todos.forEach((item, index) => {
         this.todos[index].active = ''
+        if(id == this.todos[index].id) {
+          this.todos.splice(index, 1)
+        }
       })
       this.selectedTask = null
       this.clearInput()
-      this.todos[id].display = false
       localStorage.setItem('todos', JSON.stringify(this.todos))
     },
     deselectList() {
