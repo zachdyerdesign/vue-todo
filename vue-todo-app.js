@@ -4,7 +4,8 @@ var vueTodoApp = new Vue({
     taskInput: '',
     todos: [],
     completedTasks: 0,
-    selectedTask: null
+    selectedTask: null,
+    tasksCreated: 0
   },
   mounted() {
     window.addEventListener('keydown', (event) => {
@@ -16,6 +17,8 @@ var vueTodoApp = new Vue({
     })
     if (localStorage.getItem('todos'))
       this.todos = JSON.parse(localStorage.getItem('todos'))
+    if (localStorage.getItem('tasksCreated'))
+      this.tasksCreated = parseInt(localStorage.getItem('tasksCreated'))
     this.updateCompletedTasks()
   },
   watch: {
@@ -33,14 +36,17 @@ var vueTodoApp = new Vue({
     saveTask() {
       if (this.taskInput) {
         if (this.selectedTask != null) {
-          this.todos[this.selectedTask] = { id: this.selectedTask, title: this.taskInput, active: '', display: true, completed: this.todos[this.selectedTask].completed }
+          this.todos[this.selectedTask] = { id: this.selectedTask, title: this.taskInput, active: '', completed: this.todos[this.selectedTask].completed }
         } else {
           // new task
-          this.todos.push({ id: this.todos.length, title: this.taskInput, active: '', display: true, completed: false })
+          this.todos.push({ id: this.tasksCreated, title: this.taskInput, active: '', completed: false })
+          this.tasksCreated++
+          localStorage.setItem('tasksCreated', this.tasksCreated)
         }
       }
       this.selectedTask = null
       localStorage.setItem('todos', JSON.stringify(this.todos))
+      
     },
     selectTask(id) {
       // toggle selection
@@ -52,10 +58,10 @@ var vueTodoApp = new Vue({
         this.todos[index].active = ''
         if(id == this.todos[index].id) {
           this.todos[index].active = 'active'
+          this.taskInput = this.todos[index].title
+          this.selectedTask = index
         }
       })
-      this.taskInput = this.todos[id].title
-      this.selectedTask = id
       document.getElementById('todo-input').focus()
     },
     deleteTask(id) {
@@ -77,21 +83,12 @@ var vueTodoApp = new Vue({
       this.selectedTask = null
       this.clearInput()
     },
-    saveCompletedTasks(id) {
-      console.log('task id', id)
-      if (this.todos[id].completed) {
-        this.todos[id].completed = false
-      } else {
-        this.todos[id].completed = true
-      }
-      localStorage.setItem('todos', JSON.stringify(this.todos))
-      this.updateCompletedTasks()
-    },
     updateCompletedTasks(){
       this.completedTasks = 0
       this.todos.forEach((item, index)=>{
         if(item.completed) this.completedTasks++
       })
+      localStorage.setItem('todos', JSON.stringify(this.todos))
     }
   }
 })
