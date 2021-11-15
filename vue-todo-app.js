@@ -3,7 +3,7 @@ var vueTodoApp = new Vue({
   data: {
     taskInput: '',
     todos: [],
-    totalTasksCreated: 0,
+    completedTasks: 0,
     selectedTask: null
   },
   mounted() {
@@ -70,6 +70,7 @@ var vueTodoApp = new Vue({
       this.clearInput()
     },
     saveCompletedTasks(id) {
+      console.log('task id', id)
       if (this.todos[id].completed) {
         this.todos[id].completed = false
       } else {
