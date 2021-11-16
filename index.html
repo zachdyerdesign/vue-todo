@@ -56,7 +56,7 @@
                       <input class="form-check-input me-1" type="checkbox" :value="index" v-model="todo.completed">
                       <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
                       <template v-else>{{todo.title}}</template> 
-                      <a href="#" @click="deleteTask(index)" class="text-white float-end"
+                      <a href="#" @click="deleteTask(todo)" class="text-white float-end"
                         v-if="todo.active"><i class="fas fa-trash"></i></a>
                     </button>
                   </draggable>

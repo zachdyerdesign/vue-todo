@@ -68,15 +68,10 @@ var vueTodoApp = new Vue({
       // })
       document.getElementById('todo-input').focus()
     },
-    deleteTask(id) {
-      this.todos.forEach((item, index) => {
-        this.todos[index].active = ''
-        if(id == this.todos[index].id) {
-          // this.todos.splice(index, 1) 
-          this.todos[index].deleted = true
-        }
-      })
-      this.selectedTask = null
+    deleteTask(task) {
+      task.deleted = true
+      task.active = false
+      this.taskIndex = null
       this.clearInput()
       localStorage.setItem('todos', JSON.stringify(this.todos))
     },
