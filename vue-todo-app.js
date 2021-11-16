@@ -62,7 +62,7 @@ var vueTodoApp = new Vue({
         } else {
           // new task
           console.log("new reward")
-          this.rewards.push({ id: this.rewards.length, title: this.taskInput, active: false, deleted: false })
+          this.rewards.push({ id: this.rewards.length, title: this.taskInput, active: false, deleted: false, inventory: 0 })
         }
       }
       this.rewardIndex = null
@@ -93,6 +93,16 @@ var vueTodoApp = new Vue({
       this.taskInput = reward.title
       this.rewardIndex = index
       document.getElementById('todo-input').focus()
+    },
+    purchaseReward(reward){
+      reward.inventory++
+    },
+    deleteReward(reward){
+      reward.deleted = true
+      reward.active = false
+      this.rewardIndex = null
+      this.clearInput()
+      localStorage.setItem('todos', JSON.stringify(this.todos))
     },
     deleteTask(task) {
       task.deleted = true

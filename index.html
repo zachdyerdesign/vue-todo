@@ -73,12 +73,13 @@
               <draggable v-model="rewards" draggable=".list-group-item" handle=".handle">
                 <button type="button" class="list-group-item list-group-item-action" :class="{active: reward.active}"
                   v-for="(reward, index) in rewards" @click.self="selectReward(reward, index)" :keys="index" v-if="!reward.deleted">
-                  <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
-                  <input class="form-check-input me-1" type="checkbox" :value="index" v-model="reward.completed">
-                  <template v-if="reward.completed"><del>{{ reward.title }}</del></template>
-                  <template v-else>{{reward.title}}</template> 
-                  <a href="#" @click="deleteReward(reward)" class="text-white float-end"
-                    v-if="reward.active"><i class="fas fa-trash"></i></a>
+                  <i class="fas fa-bars handle me-2" @mousedown="deselectList" v-if="!reward.active"></i>
+                  <a href="#" @click="purchaseReward(reward)" class="text-white" v-else><i class="fas fa-shopping-cart"></i></a>
+                  <span class="badge bg-primary rounded-pill">{{reward.inventory}}</span>
+                  {{reward.title}}
+                  <span class="float-end" v-if="reward.active">
+                    <a href="#" @click="deleteReward(reward)" class="text-white"><i class="fas fa-trash"></i></a>
+                  </span>  
                 </button>
               </draggable>
             </div>
