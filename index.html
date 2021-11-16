@@ -28,13 +28,13 @@
       </div>
       <ul class="nav nav-pills" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab" aria-controls="home" aria-selected="true">Tasks</button>
+          <button class="nav-link active" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab" aria-controls="home" aria-selected="true" @click="switchTab('tasks')"><i class="fas fa-check"></i> Tasks</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="rewards-tab" data-bs-toggle="tab" data-bs-target="#rewards" type="button" role="tab" aria-controls="profile" aria-selected="false" @click.self="deselectList">Rewards</button>
+          <button class="nav-link" id="rewards-tab" data-bs-toggle="tab" data-bs-target="#rewards" type="button" role="tab" aria-controls="profile" aria-selected="false" @click="switchTab('rewards')"><i class="fas fa-gift"></i> Rewards</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="trash-tab" data-bs-toggle="tab" data-bs-target="#trash" type="button" role="tab" aria-controls="trash" aria-selected="false" @click.self="deselectList"><i class="fas fa-trash"></i> Trash</button>
+          <button class="nav-link" id="trash-tab" data-bs-toggle="tab" data-bs-target="#trash" type="button" role="tab" aria-controls="trash" aria-selected="false" @click="switchTab('trash')"><i class="fas fa-trash"></i> Trash</button>
         </li>
       </ul>
       <div class="tab-content mt-2" id="myTabContent">
@@ -65,7 +65,25 @@
           </div>
         </div>
         <div class="tab-pane fade" id="rewards" role="tabpanel" aria-labelledby="rewards-tab">
-          Completed Tasks: {{completedTasks}}
+          <div class="row">
+            <div class="col-md-4">
+              Completed Tasks: {{completedTasks}}
+            </div>
+            <div class="col-md-8">
+              <draggable v-model="rewards" draggable=".list-group-item" handle=".handle">
+                <button type="button" class="list-group-item list-group-item-action" :class="{active: reward.active}"
+                  v-for="(reward, index) in rewards" @click.self="selectReward(reward, index)" :keys="index" v-if="!reward.deleted">
+                  <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
+                  <input class="form-check-input me-1" type="checkbox" :value="index" v-model="reward.completed">
+                  <template v-if="reward.completed"><del>{{ reward.title }}</del></template>
+                  <template v-else>{{reward.title}}</template> 
+                  <a href="#" @click="deleteReward(reward)" class="text-white float-end"
+                    v-if="reward.active"><i class="fas fa-trash"></i></a>
+                </button>
+              </draggable>
+            </div>
+          </div>
+          
         </div>
         <div class="tab-pane fade" id="trash" role="tabpanel" aria-labelledby="trash-tab">
           <div class="row">
@@ -77,7 +95,6 @@
             <div class="col-md-8">
               <button type="button" class="list-group-item list-group-item-action" :class="{active: todo.active}"
                 v-for="(todo, index) in todos" @click.self="selectTask(todo, index)" :keys="index" v-if="todo.deleted">
-                <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
                 <input class="form-check-input me-1" type="checkbox" :value="index" v-model="todo.completed">
                 <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
                 <template v-else>{{todo.title}}</template> 

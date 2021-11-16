@@ -3,20 +3,26 @@ var vueTodoApp = new Vue({
   data: {
     taskInput: '',
     todos: [],
+    rewards: [],
     completedTasks: 0,
     selectedTask: null,
-    taskIndex: null
+    taskIndex: null,
+    rewardIndex: null,
+    currentTab: 'tasks'
   },
   mounted() {
     window.addEventListener('keydown', (event) => {
       if (event.key == 'Enter') {
         console.log('Add task!')
-        this.saveTask()
+        if(this.currentTab == 'tasks') this.saveTask()
+        if(this.currentTab == 'rewards') this.saveReward()
         this.clearInput()
       }
     })
     if (localStorage.getItem('todos'))
       this.todos = JSON.parse(localStorage.getItem('todos'))
+    if (localStorage.getItem('rewards'))
+      this.rewards = JSON.parse(localStorage.getItem('rewards'))
     this.updateCompletedTasks()
   },
   watch: {
@@ -47,6 +53,21 @@ var vueTodoApp = new Vue({
       localStorage.setItem('todos', JSON.stringify(this.todos))
       
     },
+    saveReward(){
+      if (this.taskInput) {
+        if (this.rewardIndex != null) {
+          console.log("reward edit")
+          this.rewards[this.rewardIndex].title = this.taskInput, 
+          this.rewards[this.rewardIndex].active = false
+        } else {
+          // new task
+          console.log("new reward")
+          this.rewards.push({ id: this.rewards.length, title: this.taskInput, active: false, deleted: false })
+        }
+      }
+      this.rewardIndex = null
+      localStorage.setItem('rewards', JSON.stringify(this.rewards))
+    },
     selectTask(task, index) {
       // toggle selection
       if(task.active) { 
@@ -58,6 +79,19 @@ var vueTodoApp = new Vue({
       }
       this.taskInput = task.title
       this.taskIndex = index
+      document.getElementById('todo-input').focus()
+    },
+    selectReward(reward, index){
+      // toggle selection
+      if(reward.active) { 
+        reward.active = false
+        return
+      } else {
+        this.deselectList()
+        reward.active = true
+      }
+      this.taskInput = reward.title
+      this.rewardIndex = index
       document.getElementById('todo-input').focus()
     },
     deleteTask(task) {
@@ -86,9 +120,13 @@ var vueTodoApp = new Vue({
     },
     deselectList() {
       this.todos.forEach((item, index) => {
-        this.todos[index].active = ''
+        this.todos[index].active = false
       })
       this.selectedTask = null
+      this.rewards.forEach((item, index) => {
+        this.rewards[index].active = false
+      })
+      this.selectedReward = null
       this.clearInput()
     },
     updateCompletedTasks(){
@@ -97,6 +135,10 @@ var vueTodoApp = new Vue({
         if(item.completed) this.completedTasks++
       })
       localStorage.setItem('todos', JSON.stringify(this.todos))
+    },
+    switchTab(tab){
+      this.deselectList()
+      this.currentTab = tab
     }
   }
 })
