@@ -48,7 +48,7 @@
                 <ul class="list-group" id="task-list">
                   <draggable v-model="todos" draggable=".list-group-item" handle=".handle">
                     <button type="button" class="list-group-item list-group-item-action" :class="{active: todo.active}"
-                      v-for="todo in todos" @click.self="selectTask(todo.id)">
+                      v-for="todo in todos" @click.self="selectTask(todo.id)" :keys="todo.id">
                       <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
                       <input class="form-check-input me-1" type="checkbox" :value="todo.id" v-model="todo.completed">
                       <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
@@ -58,6 +58,7 @@
                     </button>
                   </draggable>
                 </ul>
+                <code>Task Selected: {{selectedTask}}</code>
 <code><pre>
                     {{todos}}
                   </pre>
