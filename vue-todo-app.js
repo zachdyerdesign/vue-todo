@@ -59,7 +59,7 @@ var vueTodoApp = new Vue({
         if(id == this.todos[index].id) {
           this.todos[index].active = 'active'
           this.taskInput = this.todos[index].title
-          this.selectedTask = index
+          this.selectedTask = this.todos[index].id
         }
       })
       document.getElementById('todo-input').focus()
