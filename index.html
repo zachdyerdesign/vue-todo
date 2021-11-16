@@ -72,6 +72,17 @@
           <div class="tab-pane fade" id="rewards" role="tabpanel" aria-labelledby="rewards-tab">
             Completed Tasks: {{completedTasks}}
           </div>
+          <div class="tab-pane fade" id="trash" role="tabpanel" aria-labelledby="trash-tab">
+            <button type="button" class="list-group-item list-group-item-action" :class="{active: todo.active}"
+              v-for="(todo, index) in todos" @click.self="selectTask(todo, index)" :keys="index" v-if="todo.deleted">
+              <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
+              <input class="form-check-input me-1" type="checkbox" :value="index" v-model="todo.completed">
+              <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
+              <template v-else>{{todo.title}}</template> 
+              <a href="#" @click="restoreTask(todo)" class="text-white float-end"
+                v-if="todo.active"><i class="fas fa-undo"></i></a>
+            </button>
+          </div>
         </div>
         
     </div>

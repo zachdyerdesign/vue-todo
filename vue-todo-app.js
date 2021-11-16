@@ -75,6 +75,13 @@ var vueTodoApp = new Vue({
       this.clearInput()
       localStorage.setItem('todos', JSON.stringify(this.todos))
     },
+    restoreTask(task){
+      task.deleted = false
+      task.active = false
+      this.taskIndex = null
+      this.clearInput()
+      localStorage.setItem('todos', JSON.stringify(this.todos))
+    },
     deselectList() {
       this.todos.forEach((item, index) => {
         this.todos[index].active = ''
