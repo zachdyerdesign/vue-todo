@@ -5,7 +5,7 @@ var vueTodoApp = new Vue({
     todos: [],
     completedTasks: 0,
     selectedTask: null,
-    tasksCreated: 0
+    taskIndex: null
   },
   mounted() {
     window.addEventListener('keydown', (event) => {
@@ -17,8 +17,6 @@ var vueTodoApp = new Vue({
     })
     if (localStorage.getItem('todos'))
       this.todos = JSON.parse(localStorage.getItem('todos'))
-    if (localStorage.getItem('tasksCreated'))
-      this.tasksCreated = parseInt(localStorage.getItem('tasksCreated'))
     this.updateCompletedTasks()
   },
   watch: {
@@ -35,40 +33,47 @@ var vueTodoApp = new Vue({
     },
     saveTask() {
       if (this.taskInput) {
-        if (this.selectedTask != null) {
-          this.todos[this.selectedTask] = { id: this.selectedTask, title: this.taskInput, active: '', completed: this.todos[this.selectedTask].completed }
+        if (this.taskIndex) {
+          console.log("task edit")
+          this.todos[this.taskIndex].title = this.taskInput, 
+          this.todos[this.taskIndex].active = false
         } else {
           // new task
-          this.todos.push({ id: this.tasksCreated, title: this.taskInput, active: '', completed: false })
-          this.tasksCreated++
-          localStorage.setItem('tasksCreated', this.tasksCreated)
+          console.log("new task")
+          this.todos.push({ id: this.todos.length, title: this.taskInput, active: '', completed: false, deleted: false })
         }
       }
-      this.selectedTask = null
+      this.taskIndex = null
       localStorage.setItem('todos', JSON.stringify(this.todos))
       
     },
-    selectTask(id) {
+    selectTask(task, index) {
       // toggle selection
-      if(id==this.selectedTask) {
-        this.deselectList()
+      if(task.active) { 
+        task.active = false
         return
+      } else {
+        this.deselectList()
+        task.active = true
       }
-      this.todos.forEach((item, index) => {
-        this.todos[index].active = ''
-        if(id == this.todos[index].id) {
-          this.todos[index].active = 'active'
-          this.taskInput = this.todos[index].title
-          this.selectedTask = this.todos[index].id
-        }
-      })
+      this.taskInput = task.title
+      this.taskIndex = index
+      // this.todos.forEach((item, index) => {
+      //   this.todos[index].active = ''
+      //   if(id == this.todos[index].id) {
+      //     this.todos[index].active = 'active'
+      //     this.taskInput = this.todos[index].title
+      //     this.selectedTask = this.todos[index].id
+      //   }
+      // })
       document.getElementById('todo-input').focus()
     },
     deleteTask(id) {
       this.todos.forEach((item, index) => {
         this.todos[index].active = ''
         if(id == this.todos[index].id) {
-          this.todos.splice(index, 1)
+          // this.todos.splice(index, 1) 
+          this.todos[index].deleted = true
         }
       })
       this.selectedTask = null
