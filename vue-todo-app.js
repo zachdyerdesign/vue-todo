@@ -40,7 +40,7 @@ var vueTodoApp = new Vue({
         } else {
           // new task
           console.log("new task")
-          this.todos.push({ id: this.todos.length, title: this.taskInput, active: '', completed: false, deleted: false })
+          this.todos.push({ id: this.todos.length, title: this.taskInput, active: false, completed: false, deleted: false })
         }
       }
       this.taskIndex = null
@@ -72,6 +72,16 @@ var vueTodoApp = new Vue({
       task.active = false
       this.taskIndex = null
       this.clearInput()
+      localStorage.setItem('todos', JSON.stringify(this.todos))
+    },
+    emptyTrash(){
+      let todos = []
+      this.todos.forEach((task, index)=>{     
+        if(!task.deleted) {
+          todos.push(task)
+        }
+      })
+      this.todos = todos
       localStorage.setItem('todos', JSON.stringify(this.todos))
     },
     deselectList() {

@@ -16,75 +16,78 @@
 <body>
   <div id="vue-todo-app" class="min-vh-100" @click.self="deselectList">
     <div class="container mt-5">
-        <div class="row">
-          <div class="col-md-4">
-            <h1><i class="fas fa-tasks"></i> Vue Todo List</h1>
+      <div class="row">
+        <div class="col-md-4">
+          <h1><i class="fas fa-tasks"></i> Vue Todo List</h1>
+        </div>
+        <div class="col-md-8">
+          <div class="input-group input-group-lg">
+            <input type="text" class="form-control mb-2" id="todo-input" v-model="taskInput">
           </div>
-          <div class="col-md-8">
-            <div class="input-group input-group-lg">
-              <input type="text" class="form-control mb-2" id="todo-input" v-model="taskInput">
+        </div>
+      </div>
+      <ul class="nav nav-pills" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab" aria-controls="home" aria-selected="true">Tasks</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="rewards-tab" data-bs-toggle="tab" data-bs-target="#rewards" type="button" role="tab" aria-controls="profile" aria-selected="false" @click.self="deselectList">Rewards</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="trash-tab" data-bs-toggle="tab" data-bs-target="#trash" type="button" role="tab" aria-controls="trash" aria-selected="false" @click.self="deselectList"><i class="fas fa-trash"></i> Trash</button>
+        </li>
+      </ul>
+      <div class="tab-content mt-2" id="myTabContent">
+        <div class="tab-pane fade show active" id="tasks" role="tabpanel" aria-labelledby="tasks-tab">
+          <div class="row" >
+            <div class="col-md-4 d-none d-md-block" @click.self="deselectList">
+              <h3>Instructions</h3>
+              <p>Add a task by typing in the input box and pressing enter or clicking away.</p>
+              <p>Delete a task from the list by selecting it and hitting the trash icon.</p>
+              <p>Edit a task by selecting it from the list and typing in the text box on top.</p>
+              <p>Your task list is automatically saved locally on your device when your task list is modified.</p>
+            </div>
+            <div class="col-md-8">
+              <ul class="list-group" id="task-list">
+                <draggable v-model="todos" draggable=".list-group-item" handle=".handle">
+                  <button type="button" class="list-group-item list-group-item-action" :class="{active: todo.active}"
+                    v-for="(todo, index) in todos" @click.self="selectTask(todo, index)" :keys="index" v-if="!todo.deleted">
+                    <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
+                    <input class="form-check-input me-1" type="checkbox" :value="index" v-model="todo.completed">
+                    <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
+                    <template v-else>{{todo.title}}</template> 
+                    <a href="#" @click="deleteTask(todo)" class="text-white float-end"
+                      v-if="todo.active"><i class="fas fa-trash"></i></a>
+                  </button>
+                </draggable>
+              </ul>
             </div>
           </div>
         </div>
-        <ul class="nav nav-pills" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab" aria-controls="home" aria-selected="true">Tasks</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="rewards-tab" data-bs-toggle="tab" data-bs-target="#rewards" type="button" role="tab" aria-controls="profile" aria-selected="false" @click.self="deselectList">Rewards</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="trash-tab" data-bs-toggle="tab" data-bs-target="#trash" type="button" role="tab" aria-controls="trash" aria-selected="false" @click.self="deselectList"><i class="fas fa-trash"></i> Trash</button>
-          </li>
-        </ul>
-        <div class="tab-content mt-2" id="myTabContent">
-          <div class="tab-pane fade show active" id="tasks" role="tabpanel" aria-labelledby="tasks-tab">
-            <div class="row" >
-              <div class="col-md-4 d-none d-md-block" @click.self="deselectList">
-                <h3>Instructions</h3>
-                <p>Add a task by typing in the input box and pressing enter or clicking away.</p>
-                <p>Delete a task from the list by selecting it and hitting the trash icon.</p>
-                <p>Edit a task by selecting it from the list and typing in the text box on top.</p>
-                <p>Your task list is automatically saved locally on your device when your task list is modified.</p>
-              </div>
-              <div class="col-md-8">
-                <ul class="list-group" id="task-list">
-                  <draggable v-model="todos" draggable=".list-group-item" handle=".handle">
-                    <button type="button" class="list-group-item list-group-item-action" :class="{active: todo.active}"
-                      v-for="(todo, index) in todos" @click.self="selectTask(todo, index)" :keys="index" v-if="!todo.deleted">
-                      <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
-                      <input class="form-check-input me-1" type="checkbox" :value="index" v-model="todo.completed">
-                      <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
-                      <template v-else>{{todo.title}}</template> 
-                      <a href="#" @click="deleteTask(todo)" class="text-white float-end"
-                        v-if="todo.active"><i class="fas fa-trash"></i></a>
-                    </button>
-                  </draggable>
-                </ul>
+        <div class="tab-pane fade" id="rewards" role="tabpanel" aria-labelledby="rewards-tab">
+          Completed Tasks: {{completedTasks}}
+        </div>
+        <div class="tab-pane fade" id="trash" role="tabpanel" aria-labelledby="trash-tab">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="btn-group-vertical" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" @click="emptyTrash">Empty Trash</button>
               </div>
             </div>
+            <div class="col-md-8">
+              <button type="button" class="list-group-item list-group-item-action" :class="{active: todo.active}"
+                v-for="(todo, index) in todos" @click.self="selectTask(todo, index)" :keys="index" v-if="todo.deleted">
+                <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
+                <input class="form-check-input me-1" type="checkbox" :value="index" v-model="todo.completed">
+                <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
+                <template v-else>{{todo.title}}</template> 
+                <a href="#" @click="restoreTask(todo)" class="text-white float-end"
+                  v-if="todo.active"><i class="fas fa-undo"></i></a>
+              </button>
+            </div>
           </div>
-          <div class="tab-pane fade" id="rewards" role="tabpanel" aria-labelledby="rewards-tab">
-            Completed Tasks: {{completedTasks}}
-          </div>
-          <div class="tab-pane fade" id="trash" role="tabpanel" aria-labelledby="trash-tab">
-            <button type="button" class="list-group-item list-group-item-action" :class="{active: todo.active}"
-              v-for="(todo, index) in todos" @click.self="selectTask(todo, index)" :keys="index" v-if="todo.deleted">
-              <i class="fas fa-bars handle me-2" @mousedown="deselectList"></i>
-              <input class="form-check-input me-1" type="checkbox" :value="index" v-model="todo.completed">
-              <template v-if="todo.completed"><del>{{ todo.title }}</del></template>
-              <template v-else>{{todo.title}}</template> 
-              <a href="#" @click="restoreTask(todo)" class="text-white float-end"
-                v-if="todo.active"><i class="fas fa-undo"></i></a>
-            </button>
-          </div>
-          <code>Task Index: {{taskIndex}}</code>
-          <code><pre>
-              {{todos}}
-            </pre>
-          </code>
         </div>
-        
+      </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
