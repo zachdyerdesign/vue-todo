@@ -33,7 +33,7 @@ var vueTodoApp = new Vue({
     },
     saveTask() {
       if (this.taskInput) {
-        if (this.taskIndex) {
+        if (this.taskIndex != null) {
           console.log("task edit")
           this.todos[this.taskIndex].title = this.taskInput, 
           this.todos[this.taskIndex].active = false
@@ -58,14 +58,6 @@ var vueTodoApp = new Vue({
       }
       this.taskInput = task.title
       this.taskIndex = index
-      // this.todos.forEach((item, index) => {
-      //   this.todos[index].active = ''
-      //   if(id == this.todos[index].id) {
-      //     this.todos[index].active = 'active'
-      //     this.taskInput = this.todos[index].title
-      //     this.selectedTask = this.todos[index].id
-      //   }
-      // })
       document.getElementById('todo-input').focus()
     },
     deleteTask(task) {

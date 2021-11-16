@@ -40,7 +40,7 @@
         <div class="tab-content mt-2" id="myTabContent">
           <div class="tab-pane fade show active" id="tasks" role="tabpanel" aria-labelledby="tasks-tab">
             <div class="row" >
-              <div class="col-md-4" @click.self="deselectList">
+              <div class="col-md-4 d-none d-md-block" @click.self="deselectList">
                 <h3>Instructions</h3>
                 <p>Add a task by typing in the input box and pressing enter or clicking away.</p>
                 <p>Delete a task from the list by selecting it and hitting the trash icon.</p>
@@ -61,11 +61,6 @@
                     </button>
                   </draggable>
                 </ul>
-                <code>Task Index: {{taskIndex}}</code>
-<code><pre>
-                    {{todos}}
-                  </pre>
-                </code>
               </div>
             </div>
           </div>
@@ -83,6 +78,11 @@
                 v-if="todo.active"><i class="fas fa-undo"></i></a>
             </button>
           </div>
+          <code>Task Index: {{taskIndex}}</code>
+          <code><pre>
+              {{todos}}
+            </pre>
+          </code>
         </div>
         
     </div>
